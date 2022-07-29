@@ -29,6 +29,7 @@ namespace WAUserLogReg.Controllers
         {
             if (ModelState.IsValid)
             {
+                Console.WriteLine("Validation passed succsesfully");
                 AppUser user = new AppUser
                 {
                     UserName = registerVM.Name,
@@ -38,6 +39,7 @@ namespace WAUserLogReg.Controllers
                 var result = await _userManager.CreateAsync(user, registerVM.Password);
                 if (result.Succeeded)
                 {
+                    Console.WriteLine("User Created");
                     await _singInManager.SignInAsync(user, false);
                     user.LastLogin = DateTime.Now;
                     return RedirectToAction("Index", "Home");
