@@ -1,0 +1,34 @@
+﻿@using System.Collections.Generic
+@model IEnumerable<AppUser>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <br />
+    <table align="center" border="1">
+        <tr>
+            <td>Name</td>
+            <td>Email</td>
+            <td>DateRegistration</td>
+        </tr>
+        @if (Model == null)
+        {
+            <tr>
+                <td colspan="3">Нет пользователей</td>
+            </tr>
+        }
+        else{
+            @foreach(var user in Model)
+            {
+                <tr>
+                    <td>user.UserName</td>
+                    <td>user.Email</td>
+                    <td>user.DateRegistration</td>
+                </tr>
+            }
+        }
+    </table>
+</div>
