@@ -8,6 +8,8 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <br />
+    @User.Identity.IsAuthenticated
+    @User.Identity.Name
     <table class="table table-striped" align="center" border="1">
         <tr back>
             <th>User name</th>
@@ -25,10 +27,10 @@
             @foreach(var user in Model)
             {
                 <tr>
-                    <td>user.UserName</td>
-                    <td>user.Email</td>
-                    <td>user.LastLogin</td>
-                    <td>user.DateRegistration</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.LastLogin</td>
+                    <td>@user.RegisterTime</td>
                 </tr>
             }
         }

@@ -1,5 +1,4 @@
-﻿@using WAUserLogReg.ViewModel
-@model RegisterViewModel
+﻿@model WAUserLogReg.ViewModel.RegisterViewModel
 @{
 }
 
@@ -28,7 +27,7 @@
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <a class="btn btn-outline-success" asp-controller="Account" asp-action="Register">Submit</a>
+                        <input type="submit" value="Register" />
                     </div>
                 </form>
             </div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using WAUserLogReg.Models;
@@ -16,9 +17,10 @@ namespace WAUserLogReg.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        [Authorize]
+        public async Task<IActionResult> Index()
         {
-            return View(_userManager.Users.ToList());
+            return View(_userManager.Users);
         }
 
         public IActionResult Privacy()
