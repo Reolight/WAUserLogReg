@@ -14,8 +14,8 @@
         <tr back>
             <th>User name</th>
             <th>Email</th>
-            <th>Last login</th>
             <th>Registration time</th>
+            <th>Last login</th>
         </tr>
         @if (Model.Count() == 0)
         {
@@ -29,8 +29,8 @@
                 <tr>
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
-                    <td>@user.LastLogin</td>
                     <td>@user.RegisterTime</td>
+                    <td>@user.LastLogin</td>
                 </tr>
             }
         }

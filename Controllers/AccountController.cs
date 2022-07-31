@@ -30,7 +30,6 @@ namespace WAUserLogReg.Controllers
         {
             if (ModelState.IsValid)
             {
-                Console.WriteLine("Validation passed succsesfully");
                 AppUser user = new AppUser
                 {
                     UserName = registerVM.Name,
@@ -40,9 +39,7 @@ namespace WAUserLogReg.Controllers
                 var result = await _userManager.CreateAsync(user, registerVM.Password);
                 if (result.Succeeded)
                 {
-                    Console.WriteLine("User Created");
-                    await _signInManager.SignInAsync(user, false);
-                    user.LastLogin = DateTime.Now;
+                    await SignIn(user.UserName, registerVM.Password, false);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -69,8 +66,7 @@ namespace WAUserLogReg.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(loginVM.Name, loginVM.Password, loginVM.RememberMe, false);
-                if (result.Succeeded)
+                if (await SignIn(loginVM.Name, loginVM.Password, loginVM.RememberMe))
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -86,9 +82,26 @@ namespace WAUserLogReg.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            (await _userManager.FindByNameAsync(User.Identity.Name)).LastLogin = DateTime.Now;
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        private async Task<bool> SignIn(string name, string password, bool rememberMe)
+        {
+            AppUser user = await _userManager.FindByNameAsync(name);
+            var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, false);
+            if (result.Succeeded)
+            {
+                user.LastLogin = DateTime.Now;
+                await _userManager.UpdateAsync(user);
+                return true;
+            }
+            else
+            {
+                ModelState.AddModelError("", "Wrong crefentials, try again");
+            }
+
+            return false;
         }
     }
 }
