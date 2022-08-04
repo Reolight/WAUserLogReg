@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using WAUserLogReg.Data;
 using WAUserLogReg.Models;
 using WAUserLogReg.ViewModel;
 
@@ -13,22 +14,23 @@ namespace WAUserLogReg.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(UserManager<AppUser> userManager, ILogger<HomeController> logger, SignInManager<AppUser> signInManager)
+        public HomeController(UserManager<AppUser> userManager, ILogger<HomeController> logger, SignInManager<AppUser> signInManager, ApplicationDbContext _context)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
+            this._context = _context;
         }
 
         [Authorize]
         public IActionResult Index()
         {
-            return View();
-        }
-        
-        public IActionResult Privacy()
-        {
+            if (User.Identity == null) return View();
+            AppUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            user.LastLogin = DateTime.Now;
+            _userManager.UpdateAsync(user);
             return View();
         }
 
@@ -70,13 +72,14 @@ namespace WAUserLogReg.Controllers
         {
             foreach (AppUser user in users)
             {
-                if (User.Identity is { IsAuthenticated: true } && willIBanThem)
-                {
-                    await _signInManager.SignOutAsync();
-                }
-
                 user.IsBlocked = willIBanThem;
                 await _userManager.UpdateAsync(user);
+
+                if (User.Identity is { IsAuthenticated: true } && user.UserName == User.Identity.Name && willIBanThem)
+                {
+                    await _signInManager.SignOutAsync();
+                    RedirectToAction("Index", "Home");
+                }
             }
 
             return true;
@@ -86,7 +89,7 @@ namespace WAUserLogReg.Controllers
         {
             foreach (AppUser user in users)
             {
-                if (User.Identity is { IsAuthenticated: true })
+                if (User.Identity is { IsAuthenticated: true } && User.Identity.Name == user.UserName)
                 {
                     await _signInManager.SignOutAsync();
                 }

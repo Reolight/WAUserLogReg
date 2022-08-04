@@ -42,12 +42,10 @@ namespace WAUserLogReg.Controllers
                     await SignIn(user.UserName, registerVM.Password, false);
                     return RedirectToAction("Index", "Home");
                 }
-                else
+
+                foreach (var error in result.Errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
             return View(registerVM);
@@ -56,8 +54,8 @@ namespace WAUserLogReg.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            var responce = new LoginViewModel();
-            return View(responce);
+            var response = new LoginViewModel();
+            return View(response);
         }
 
         [HttpPost]
@@ -87,6 +85,7 @@ namespace WAUserLogReg.Controllers
             if (user.IsBlocked)
             {
                 ModelState.AddModelError("", "You were banned and can't log in :<");
+                return false;
             }
             
             var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, false);
@@ -96,11 +95,8 @@ namespace WAUserLogReg.Controllers
                 await _userManager.UpdateAsync(user);
                 return true;
             }
-            else
-            {
-                ModelState.AddModelError("", "Wrong credentials, try again");
-            }
 
+            ModelState.AddModelError("", "Wrong credentials, try again");
             return false;
         }
     }

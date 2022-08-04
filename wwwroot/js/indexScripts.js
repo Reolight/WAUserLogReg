@@ -1,7 +1,14 @@
-﻿window.onload = (event) => renderUsers();
-document.getElementById("ban").addEventListener("click", () => DoPostAction("ban"));
-document.getElementById("unban").addEventListener("click", () => DoPostAction("unban"));
-document.getElementById("del").addEventListener("click", () => DoPostAction("del"));
+﻿window.onload = () => {renderUsers(); useHandlers();}
+
+function del(){ DoPostAction('del')}
+function ban(){ DoPostAction('ban')}
+function unban(){DoPostAction('unban')}
+
+function useHandlers(){
+    document.getElementById("ban").addEventListener("click", ban);
+    document.getElementById("unban").addEventListener("click", unban);
+    document.getElementById("del").addEventListener("click", del);
+}
 
 async function getUsers() {
     let url = 'account/admin';
@@ -9,7 +16,7 @@ async function getUsers() {
         let res = await fetch(url);
         return await res.json();
     } catch (error) {
-        console.log(error);
+        getUsers()
     }
 }
 
@@ -28,11 +35,11 @@ async function renderUsers() {
         if (user.isBanned) colorPropery = 'style="color:red"'
         let htmlSegment = `
                     <tr ${colorPropery}>
-                        <th><input type="checkbox" name="CB" id=@user.UserName/></th>
+                        <th><input type="checkbox" name="CB" id=${user.Name} /></th>
                         <td>${user.Name}</td>
                         <td>${user.Email}</td>
-                        <td>${user.LastLogin}</td>
                         <td>${user.RegistrationTime}</td>
+                        <td>${user.LastLogin}</td>
                     </tr>
                 `;
         html += htmlSegment;
@@ -49,26 +56,28 @@ function CheckedAll()
 {
     let CBAll = document.getElementById("CBAll")
     let checkboxes = document.getElementsByName("CB")
-        //.forEach(C => { console.log(c.id); c.checked = CBAll.checked; })
     for (let cb of checkboxes){
         cb.checked = CBAll.checked
     }
 }
 
-function DoPostAction(Act){
+async function DoPostAction(Act){
     let checkboxes = document.getElementsByName("CB")
     let checkedNames = []
+    console.log("trying to " + Act)
     for (let cb of checkboxes){
         if (cb.checked){
-            checkedNames.push(cb.id.substring(0, cb.id.length - 1))
+            checkedNames.push(cb.id)
         }
     }
     
-    $.ajax({
+    await $.ajax({
         type: "POST",
         data :JSON.stringify(checkedNames),
         url: "admin/" + Act,
         contentType: "application/json",
         error: function (jqXHR, exception) {$('post').html( exception ); }
     });
+    
+    location.reload()
 }

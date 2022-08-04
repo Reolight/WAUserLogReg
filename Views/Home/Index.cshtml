@@ -2,31 +2,25 @@
     ViewData["Title"] = "Home Page";
 }
 
-<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-
 <script src="js/indexScripts.js"></script>
 <link rel="stylesheet" href="css/Index.css"/>
-<div class="text-center" onload="renderUsers()">
+<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <br />
-    <form>
-        <div asp-validation-summary="ModelOnly"></div>
-        <button class="image-button" name="ban" click="DoPostAction('ban')">
+    <button class="image-button" id="ban">
             <img src="img/185088 - lock locker streamline.png" alt="ban_img"/>
             <b>Ban users</b>
         </button>
-        <button class="image-button" name="unban" click="DoPostAction('unban')">
+        <button class="image-button" id="unban">
             <img src="img/185089 - locker streamline unlock.png" alt="unban_img"/>
             <b>Unban users</b>
         </button>
-        <button class="image-button" name="del" click="DoPostAction('del')">
+        <button class="image-button" id="del">
             <img src="img/185090 - delete garbage streamline.png" alt="del_img"/>
             <b>Delete users</b>
         </button>
         <h6 id="response"></h6>
         <table class="table table-striped">
         </table>
-    </form>
 </div>

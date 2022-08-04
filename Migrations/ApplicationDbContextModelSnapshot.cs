@@ -174,6 +174,9 @@ namespace WAUserLogReg.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("datetime2");
 
@@ -200,7 +203,7 @@ namespace WAUserLogReg.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("RegisterTime")
+                    b.Property<DateTime?>("RegisterTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
