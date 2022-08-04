@@ -67,13 +67,8 @@ namespace WAUserLogReg.Controllers
             if (ModelState.IsValid)
             {
                 if (await SignIn(loginVM.Name, loginVM.Password, loginVM.RememberMe))
-                {
                     return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Wrong crefentials, try again");
-                }
+                
             }
             return View(loginVM);
         }
@@ -89,6 +84,11 @@ namespace WAUserLogReg.Controllers
         private async Task<bool> SignIn(string name, string password, bool rememberMe)
         {
             AppUser user = await _userManager.FindByNameAsync(name);
+            if (user.IsBlocked)
+            {
+                ModelState.AddModelError("", "You were banned and can't log in :<");
+            }
+            
             var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, false);
             if (result.Succeeded)
             {
@@ -98,7 +98,7 @@ namespace WAUserLogReg.Controllers
             }
             else
             {
-                ModelState.AddModelError("", "Wrong crefentials, try again");
+                ModelState.AddModelError("", "Wrong credentials, try again");
             }
 
             return false;

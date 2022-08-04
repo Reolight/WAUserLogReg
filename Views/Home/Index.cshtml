@@ -1,44 +1,32 @@
-﻿@using System.Collections.Generic
-@model IEnumerable<AppUser>
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+<script src="js/indexScripts.js"></script>
+<link rel="stylesheet" href="css/Index.css"/>
+<div class="text-center" onload="renderUsers()">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <br />
-    @User.Identity.IsAuthenticated
-    @User.Identity.Name
-    <table class="table table-striped" align="center" border="1">
-        <tr back>
-            <th>User name</th>
-            <th>Email</th>
-            <th>Registration time</th>
-            <th>Last login</th>
-        </tr>
-        @if (Model.Count() == 0)
-        {
-            <tr>
-                <td colspan="4">There is no user (<span id="time">></span>)</td>
-            </tr>
-        }
-        else{
-            @foreach(var user in Model)
-            {
-                <tr>
-                    <td>@user.UserName</td>
-                    <td>@user.Email</td>
-                    <td>@user.RegisterTime</td>
-                    <td>@user.LastLogin</td>
-                </tr>
-            }
-        }
-    </table>
+    <form>
+        <div asp-validation-summary="ModelOnly"></div>
+        <button class="image-button" name="ban" click="DoPostAction('ban')">
+            <img src="img/185088 - lock locker streamline.png" alt="ban_img"/>
+            <b>Ban users</b>
+        </button>
+        <button class="image-button" name="unban" click="DoPostAction('unban')">
+            <img src="img/185089 - locker streamline unlock.png" alt="unban_img"/>
+            <b>Unban users</b>
+        </button>
+        <button class="image-button" name="del" click="DoPostAction('del')">
+            <img src="img/185090 - delete garbage streamline.png" alt="del_img"/>
+            <b>Delete users</b>
+        </button>
+        <h6 id="response"></h6>
+        <table class="table table-striped">
+        </table>
+    </form>
 </div>
-
-<script>
-var datetime = new Date().getHours() + ":" + new Date().getMinutes() 
-    + " " + new Date().getDate() + "." + (new Date().getMonth() +1) + "." + new Date().getFullYear();
-document.getElementById("time").textContent = datetime;
-</script>

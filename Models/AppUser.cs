@@ -7,7 +7,7 @@ namespace WAUserLogReg.Models
     {
         public DateTime? LastLogin { get; set; }
 
-        public DateTime RegisterTime { get; set; }
-        public bool isBlocked;
+        public DateTime? RegisterTime { get; set; }
+        public bool IsBlocked;
     }
 }
