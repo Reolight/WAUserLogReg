@@ -16,7 +16,7 @@ async function getUsers() {
         let res = await fetch(url);
         return await res.json();
     } catch (error) {
-        getUsers()
+        return getUsers()
     }
 }
 

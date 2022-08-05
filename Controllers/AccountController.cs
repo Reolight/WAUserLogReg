@@ -82,18 +82,21 @@ namespace WAUserLogReg.Controllers
         private async Task<bool> SignIn(string name, string password, bool rememberMe)
         {
             AppUser user = await _userManager.FindByNameAsync(name);
-            if (user.IsBlocked)
+            if (user != null)
             {
-                ModelState.AddModelError("", "You were banned and can't log in :<");
-                return false;
-            }
-            
-            var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, false);
-            if (result.Succeeded)
-            {
-                user.LastLogin = DateTime.Now;
-                await _userManager.UpdateAsync(user);
-                return true;
+                if (user.IsBlocked)
+                {
+                    ModelState.AddModelError("", "You were banned and can't log in :<");
+                    return false;
+                }
+
+                var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, false);
+                if (result.Succeeded)
+                {
+                    user.LastLogin = DateTime.Now;
+                    await _userManager.UpdateAsync(user);
+                    return true;
+                }
             }
 
             ModelState.AddModelError("", "Wrong credentials, try again");
